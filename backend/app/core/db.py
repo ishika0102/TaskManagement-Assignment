@@ -1,5 +1,5 @@
 # app/db.py
-
+from fastapi import HTTPException
 import mysql.connector
 from mysql.connector import Error
 from backend.app.core.config import config
@@ -38,14 +38,41 @@ def execute_query(connection, query):
         print("Query executed successfully")
     except Error as e:
         print(f"The error '{e}' occurred")
+        raise HTTPException(status_code=500,
+                            detail=f"The error '{e}' occurred")
+
+
+# def create_default_user():
+#     connection = create_connection()
+#     if connection:
+#         create_user_query = """
+#         INSERT INTO user (username, email, password)
+#         VALUES ('user', 'user@example.com', 'user@123')
+#         """
+#         execute_query(connection, create_user_query)
+#         connection.close()
 
 
 def create_default_user():
     connection = create_connection()
     if connection:
-        create_user_query = """
-        INSERT INTO user (username, email, password) 
-        VALUES ('user', 'user@example.com', 'user@123')
+        # Check if the user already exists
+        check_user_query = """
+        SELECT COUNT(*) FROM user WHERE username = 'user' OR email = 'user@example.com'
         """
-        execute_query(connection, create_user_query)
+        cursor = connection.cursor()
+        cursor.execute(check_user_query)
+        user_count = cursor.fetchone()[0]
+
+        if user_count == 0:
+            # If no such user exists, insert the new user
+            create_user_query = """
+            INSERT INTO user (username, email, password) 
+            VALUES ('user', 'user@example.com', 'user@123')
+            """
+            execute_query(connection, create_user_query)
+            print("User created successfully.")
+        else:
+            print("User already exists.")
+
         connection.close()

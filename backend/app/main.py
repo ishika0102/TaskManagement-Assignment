@@ -15,7 +15,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.include_router(task.router, prefix="/api")
+app.include_router(task.router, prefix="/api")
 
 
 @app.on_event("startup")
