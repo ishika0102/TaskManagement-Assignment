@@ -37,9 +37,11 @@ Follow the steps below to create the necessary database and tables:
 
 ## Features
 
-- Create, update, and delete tasks
-- Task categorization and filtering
-- Responsive user interface
+1. Create/Add a new task
+2. Retrieve a task by its ID
+3. Retrieve a list of all tasks
+4. Update an existing task
+5. Delete a task by its ID
 
 ## Technologies Used
 
