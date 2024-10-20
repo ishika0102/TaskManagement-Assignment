@@ -22,7 +22,7 @@ app.include_router(task.router, prefix="/api")
 def on_startup():
     """Event handler for app startup"""
     print("App Startup Logic Goes Here")
-    create_default_user()
+    # create_default_user()
 
 
 @app.get("/test-db")

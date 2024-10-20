@@ -15,7 +15,6 @@ function TaskForm() {
         console.log("inside add");
         e.preventDefault();
         if (!task) return;
-        // Pass task directly instead of wrapping it in another object
         addTask(task);
         
         // Reset task state
@@ -32,7 +31,7 @@ function TaskForm() {
                 value={task.title}
                 onChange={(e) => setTask({ ...task, title: e.target.value })}
                 required
-                style={{ color: 'black' }} // Set text color to black
+                style={{ color: 'black' }} 
             />
             <input
                 type="text"
@@ -41,14 +40,15 @@ function TaskForm() {
                 value={task.description}
                 onChange={(e) => setTask({ ...task, description: e.target.value })}
                 required
-                style={{ color: 'black' }} // Set text color to black
+                style={{ color: 'black' }} 
             />
             <input
-                type="datetime-local" // Change to datetime-local
+                type="datetime-local" 
                 name="deadline"
                 value={task.deadline}
                 onChange={(e) => setTask({ ...task, deadline: e.target.value })}
                 required
+                style={{ color: 'black' }} 
             />
             <input
                 type="text"
@@ -57,7 +57,7 @@ function TaskForm() {
                 value={task.createdBy}
                 onChange={(e) => setTask({ ...task, createdBy: e.target.value })}
                 required
-                style={{ color: 'black' }} // Set text color to black
+                style={{ color: 'black' }}
             />
             <button type="submit"
                 className="bg-blue-600 text-white rounded px-4 py-1"

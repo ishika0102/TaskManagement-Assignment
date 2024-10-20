@@ -1,8 +1,3 @@
-// TODO: when new task is added automatically reload the page to display the new task
-// TODO: Make the title able editable
-// TODO: After adding it should render immediatly but its giving empty card
-
-
 import './App.css';
 import { React, useState, useEffect } from 'react';
 import { TaskProvider } from './context';
@@ -11,8 +6,8 @@ import { TaskForm, TaskItems ,SearchTask} from './components';
 const App = () => {
     const [tasks, setTasks] = useState([]);
     const [selectedTaskId, setSelectedTaskId] = useState(null);
-    const [loading, setLoading] = useState(false); // Loading state
-    const [error, setError] = useState(null); // Error state
+    const [loading, setLoading] = useState(false); 
+    const [error, setError] = useState(null); 
     const [searchedTask, setSearchedTask] = useState(null);
 
     // Fetch all tasks from backend on component mount
@@ -61,7 +56,18 @@ const App = () => {
 
             if (response.ok) {
                 const newTask = await response.json();
-                setTasks((prev) => [{ ...newTask }, ...prev]); // Add the new task to local state
+                const task = {
+                    id: newTask.id, 
+                    title: newTask.title,
+                    description: newTask.description,
+                    status: newTask.status,
+                    createdAt: newTask.createdAt,
+                    updatedAt: newTask.updatedAt,
+                    deadline: newTask.deadline,
+                    createdBy: newTask.createdBy,
+                    updatedBy: newTask.updatedBy,
+                };
+                setTasks((prev) => [{ ...task }, ...prev]); // Add the new task to local state
             }
         } catch (error) {
             console.error("Error adding task:", error);
@@ -69,33 +75,32 @@ const App = () => {
     };
 
         // Update task in backend
-        const updateTask = async (taskid,task) => {
-            console.log("inside update task", taskid);
-            console.log(task);
-            if (taskid ) {
-                try {
-                    const response = await fetch(`http://localhost:8001/api/tasks/${taskid}`, {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(task),
-                    });
-    
-                    if (response.ok) {
-                        const updatedTask = await response.json();
-                        setTasks((prev) =>
-                            prev.map((prevtask) => (prevtask.id === updatedTask.id ? updatedTask : prevtask))
-                        ); // Update the local state with the updated task
-                        // setSelectedTaskId(null); // Clear selected task ID after update
-                    }
-                } catch (error) {
-                    console.error("Error updating task:", error);
+    const updateTask = async (taskid,task) => {
+        console.log("inside update task", taskid);
+        console.log(task);
+        if (taskid ) {
+            try {
+                const response = await fetch(`http://localhost:8001/api/tasks/${taskid}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(task),
+                });
+
+                if (response.ok) {
+                    const updatedTask = await response.json();
+                    setTasks((prev) =>
+                        prev.map((prevtask) => (prevtask.id === updatedTask.id ? updatedTask : prevtask))
+                    ); 
                 }
+            } catch (error) {
+                console.error("Error updating task:", error);
             }
-        };
-    
-    
+        }
+    };
+
+
     
     // Delete task from backend
     const deleteTask = async (taskid) => {
@@ -106,6 +111,7 @@ const App = () => {
                 });
 
                 if (response.ok) {
+                    
                     setTasks((prev) => prev.filter((task) => task.id !== taskid)); // Remove the task from local state
                     setSelectedTaskId(null); // Clear selected task ID after deletion
                 }
@@ -115,45 +121,20 @@ const App = () => {
         }
     };
 
-    // Toggle task completion in backend
-    const toggleCompleted = async (id) => {
-        try {
-            const task = tasks.find((t) => t.id === id);
-            const updatedTask = { ...task, completed: !task.completed };
-
-            const response = await fetch(`http://localhost:8001/api/tasks/${id}/toggle`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(updatedTask),
-            });
-
-            if (response.ok) {
-                setTasks((prev) =>
-                    prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
-                ); // Update the local state
-            }
-        } catch (error) {
-            console.error("Error toggling task completion:", error);
-        }
-    };
     const searchTask = async (id) => {
         console.log("inside search task");
         console.log(id);
         try {
-            const response = await fetch(`http://localhost:8001/api/tasks/${id}`); // GET request to fetch task by ID
+            const response = await fetch(`http://localhost:8001/api/tasks/${id}`); 
             
-            // Check if the response is ok (status in the range 200-299)
             if (!response.ok) {
                 throw new Error(`Task not found with ID: ${id}`);
             }
     
             const data = await response.json();
-            
-            // Assuming `data` is a single object and not an array
+          
             const task = {
-                id: data.id, // Adjust according to your response structure
+                id: data.id, 
                 title: data.title,
                 description: data.description,
                 status: data.status,
@@ -164,7 +145,7 @@ const App = () => {
                 updatedBy: data.updatedBy,
             };
     
-            setTasks([task]); // Set tasks to an array containing the single task
+            setTasks([task]);
             setSearchedTask(task);
             console.log("Searched Task:", task);
             console.log(searchedTask);
@@ -179,12 +160,12 @@ const App = () => {
     
 
     return (
-        <TaskProvider value={{ tasks, addTask, updateTask, deleteTask, toggleCompleted, searchTask,searchedTask }}>
+        <TaskProvider value={{ tasks, addTask, updateTask, deleteTask, searchTask,searchedTask }}>
             <div className="bg-[#172842] min-h-screen py-8">
                 <div className="w-full max-w-2xl mx-auto shadow-md rounded-lg px-4 py-3 text-white">
                     <h1 className="text-2xl font-bold text-center mb-8 mt-2">Manage Your Tasks</h1>
                     <div className="mb-4">
-                        <SearchTask setSearchedTask={setSearchedTask} /> {/* Pass the setter function */}
+                        <SearchTask/> 
                         <TaskForm onSubmit={addTask}  selectedTaskId={selectedTaskId} />
                     </div>
                     {loading && <p className="text-center">Loading tasks...</p>}

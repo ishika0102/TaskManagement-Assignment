@@ -18,20 +18,15 @@ class TaskBase(BaseModel):
 
 
 class TaskCreate(TaskBase):
+    id: Optional[int] = None
     title: str = Field(..., description="The title of the task")
     description: str = Field(...,
                              description="A brief description of the task")
     deadline: datetime = Field(..., description="The deadline for the task")
-    created_by: Optional[str] = None
-    updated_by: Optional[str] = None
+    createdBy: Optional[str] = None
+    updatedBy: Optional[str] = None
     status: str = Field(default="pending",
                         description="The status of the task")
-
-    @validator('status')
-    def status_not_empty(cls, value):
-        if value is None or value.strip() == "":
-            raise ValueError('status cannot be empty or None')
-        return value
 
     class Config:
         json_schema_extra = {

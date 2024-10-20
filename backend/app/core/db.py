@@ -42,17 +42,7 @@ def execute_query(connection, query):
                             detail=f"The error '{e}' occurred")
 
 
-# def create_default_user():
-#     connection = create_connection()
-#     if connection:
-#         create_user_query = """
-#         INSERT INTO user (username, email, password)
-#         VALUES ('user', 'user@example.com', 'user@123')
-#         """
-#         execute_query(connection, create_user_query)
-#         connection.close()
-
-
+# User Module not yet included in the project
 def create_default_user():
     connection = create_connection()
     if connection:

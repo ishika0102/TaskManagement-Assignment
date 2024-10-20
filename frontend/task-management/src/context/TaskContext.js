@@ -21,7 +21,7 @@ export const TaskContext = createContext({
         addTask : (task) => {},
         updateTask : (id,task) => {},
         deleteTask : (id) => {},
-        toggleComplete : (id) => {},
+        toggleCompleted : (id) => {},
         searchTask : (id) => {},
 });
 
@@ -31,6 +31,3 @@ export const useTask = () => {
 
 export const TaskProvider = TaskContext.Provider
 
-// export const TaskProvider = ({children}) => {
-//         return <TaskContext.Provider value={{}}>{children}</TaskContext.Provider>
-// }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTask } from '../context/TaskContext';
 
 function TaskItems({ task }) {
-    const { updateTask, deleteTask, toggleComplete } = useTask();
+    const { updateTask, deleteTask } = useTask();
 
     // Local state for all editable fields
     const [isEditable, setIsEditable] = useState(false);
@@ -20,26 +20,29 @@ function TaskItems({ task }) {
         
             const updatedTask = {
                 ...task,
-                ...taskDetails, // Merge existing task with updated fields
+                ...taskDetails,
             };
-            updateTask(task.id, updatedTask); // Call the updateTask function
+            updateTask(task.id, updatedTask); 
         
-        setIsEditable(!isEditable); // Toggle edit mode
+        setIsEditable(!isEditable); 
     };
 
-    const toggleCompleted = () => {
-        toggleComplete(task.id);
-    };
 
     return (
         <div className={`flex flex-col border border-black/10 rounded-lg p-4 gap-y-2 shadow-sm duration-300 text-black ${task.completed ? "bg-[#c6e9a7]" : "bg-[#ccbed7]"} w-80 h-auto`}>
+          <div className="flex flex-col">
+            <div className="flex justify-between items-center">
+                <label className="font-semibold">Task ID:</label>
+            </div>
+            <p className="font-medium">{task.id}</p>
+        </div>
+            
+            
             <div className="flex items-center">
-                <input
-                    type="checkbox"
-                    checked={task.completed}
-                    onChange={toggleCompleted}
-                    className="w-4 h-4 text-blue-600 bg-white border-gray-300 rounded focus:ring-blue-500"
-                />
+            <div className="flex justify-between items-center">
+                    <label className="font-semibold">Title:</label>
+                </div>
+                
                 {isEditable ? (
                     <input
                         type="text"

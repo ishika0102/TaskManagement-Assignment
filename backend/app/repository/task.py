@@ -9,14 +9,15 @@ db_connection = create_connection()
 print(db_connection)
 
 
-def create_task(task) -> dict:
+def create_task(task) -> TaskBase:
     """Create a new task."""
     try:
         create_task_query = f"""
-        INSERT INTO tasks (title, description, deadline, created_by, updated_by, status)
-        VALUES ('{task.title}', '{task.description}', '{task.deadline}', '{task.created_by}', '{task.updated_by}', '{task.status}')"""
+        INSERT INTO tasks (id,title, description, deadline, created_by, updated_by, status)
+        VALUES ('{task.id}', '{task.title}', '{task.description}', '{task.deadline}', '{task.createdBy}', '{task.updatedBy}', '{task.status}')"""
 
         execute_query(db_connection, create_task_query)
+        return get_task(task.id)
 
     except InterfaceError as e:
         print(e)
@@ -83,70 +84,10 @@ def get_tasks() -> List[TaskBase]:
                             detail="An unexpected error occurred.") from e
 
 
-# def get_task(task_id) -> dict:
-#     """Get a task by ID."""
-#     try:
-#         get_task_query = f"SELECT * FROM tasks WHERE id = {task_id}"
-#         cursor = db_connection.cursor()
-#         cursor.execute(get_task_query)
-#         task = cursor.fetchone()
-#         return task
-#     except Error as e:
-#         print(e)
-#         raise HTTPException(
-#             status_code=500,
-#             detail="Error executing the query in the database.") from e
-
-#     except Exception as e:
-#         print(e)
-#         raise HTTPException(status_code=500,
-#                             detail="An unexpected error occurred.") from e
-
-# def update_task(task_id, task_update) -> dict:
-#     """Update a task by ID."""
-
-#     print("this is task id:" + str(task_id))
-#     print("this is task update:" + task_update.title)
-#     try:
-#         update_task_query = f"""
-#         UPDATE tasks
-#         SET title = '{task_update.title}', description = '{task_update.description}', deadline = '{task_update.deadline}', updated_by = '{task_update.updated_by}'
-#         WHERE id = {task_id}"""
-#         execute_query(db_connection, update_task_query)
-#     except Error as e:
-#         print(e)
-#         raise HTTPException(
-#             status_code=500,
-#             detail="Error executing the query in the database.") from e
-
-#     except Exception as e:
-#         print("in update repository")
-#         print(e)
-#         raise HTTPException(status_code=500,
-#                             detail="An unexpected error occurred.") from e
-
-# def delete_task(task_id) -> dict:
-#     """Delete a task by ID."""
-#     try:
-#         delete_task_query = f"DELETE FROM tasks WHERE id = {task_id}"
-#         execute_query(db_connection, delete_task_query)
-#     except Error as e:
-#         print(e)
-#         raise HTTPException(
-#             status_code=500,
-#             detail="Error executing the query in the database.") from e
-
-#     except Exception as e:
-#         print("in delete repository")
-#         print(e)
-#         raise HTTPException(status_code=500,
-#                             detail="An unexpected error occurred.") from e
-
-
 def get_task(task_id: int) -> TaskBase:
     """Get a task by ID."""
     try:
-        get_task_query = f"SELECT * FROM tasks WHERE id = {task_id}"
+        get_task_query = f"SELECT * FROM tasks WHERE id = '{task_id}'"
         cursor = db_connection.cursor()
         cursor.execute(get_task_query)
         task = cursor.fetchone()
@@ -178,7 +119,7 @@ def update_task(task_id: int, task_update: TaskBase) -> TaskBase:
         SET title = '{task_update.title}', description = '{task_update.description}', 
             deadline = '{task_update.deadline}', updated_by = '{task_update.updated_by}',
             status = '{task_update.status}'
-        WHERE id = {task_id}"""
+        WHERE id = '{task_id}'"""
 
         cursor = db_connection.cursor()
         cursor.execute(update_task_query)
@@ -206,7 +147,7 @@ def delete_task(task_id: int) -> TaskBase:
         # First, get the task to return it after deletion
         task_to_delete = get_task(task_id)
 
-        delete_task_query = f"DELETE FROM tasks WHERE id = {task_id}"
+        delete_task_query = f"DELETE FROM tasks WHERE id = '{task_id}'"
         cursor = db_connection.cursor()
         cursor.execute(delete_task_query)
         db_connection.commit()
