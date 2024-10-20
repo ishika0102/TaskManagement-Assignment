@@ -74,6 +74,12 @@ DB_PASSWORD=your_password
 uvicorn backend.app.main:app --reload --port 8000
 ```
 
+To run test :
+
+```python
+ PYTHONPATH=. pytest
+```
+
 ## Frontend:
 
 ### Prerequisites:
@@ -92,6 +98,10 @@ uvicorn backend.app.main:app --reload --port 8000
 ```sql
 npm start
 ```
+
+### Below is screenshot of the frontend
+
+![alt text](<Screenshot from 2024-10-20 11-19-38.png>)
 
 ### Note:
 
